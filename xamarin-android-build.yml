@@ -42,8 +42,9 @@ jobs:
           msbuildArguments: '/t:Restore'
 
       - task: XamarinAndroid@1
+        displayName: 'Build PlanningPoker Android'
         inputs:
-          projectFile: '**/*.csproj'
+          projectFile: 'PlanningPoker/PlanningPoker.Android/PlanningPoker.Android.csproj'
           outputDirectory: ${{ parameters.outputDirectory }}
           configuration: ${{ parameters.buildConfiguration }}
 
