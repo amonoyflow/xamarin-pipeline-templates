@@ -55,7 +55,7 @@ jobs:
           apksign: true
           apksignerKeystoreFile: ${{ parameters.keystoreFile }}
           apksignerKeystorePassword: ${{ parameters.keystorePassword }}
-          apksignerKeystoreAlias: ${{ parameters.keystore.Alias }}
+          apksignerKeystoreAlias: ${{ parameters.keystoreAlias }}
           apksignerKeyPassword: ${{ parameters.keyPassword }}
           apksignerArguments: --out ${{ parameters.outputDirectory }}/app.${{ parameters.environment }}.release.apk
           zipalign: true
