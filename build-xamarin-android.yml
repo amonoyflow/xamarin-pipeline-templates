@@ -1,12 +1,48 @@
-trigger:
-- master
+parameters:
+  environment: 'NOT_DEFINE'
+  buildConfiguration: 'NOT_DEFINE'
+  outputDirectory: 'NOT_DEFINE'
+  keystoreFile: 'NOT_DEFINE'
+  keystorePassword: 'NOT_DEFINE'
+  keystoreAlias: 'NOT_DEFINE'
+  keyPassword: 'NOT_DEFINE'
 
-pool:
-  vmImage: 'macos-latest'
+jobs:
+  - job: 
+    displayName: 'Building ${{ parameters.environment }}'
+    steps:
+      - task: NuGetToolInstaller@1
+        displayName: 'Use Nuget 5.3.1'
+        inputs:
+          versionSpec: 5.3.1
 
-stages:
-    - stage: Build
-      displayName: Build Stage
-    
-    - stage: Distribute
-      displayName: Distribute stage
+      - task: MSBuild@1
+        displayName: 'Restoring Nuget'
+        inputs:
+          solution: '**/*.sln'
+          configuration: '${{ parameters.buildConfiguration }}'
+          msbuildArguments: '/t:Restore'
+
+      - task: XamarinAndroid@1
+        inputs:
+          projectFile: '**/*.csproj'
+          outputDirectory: ${{ parameters.outputDirectory }}
+          configuration: ${{ parameters.buildConfiguration }}
+
+      - task: AndroidSigning@3
+        displayName: 'Singing and Aligning APK files(s)'
+        inputs:
+          apkFiles: '${{ parameters.outputDirectory }}/*.apk'
+          apksign: true
+          apksignerKeystoreFile: ${{ parameters.keystoreFile }}
+          apksignerKeystorePassword: ${{ parameters.keystorePassword }}
+          apksignerKeystoreAlias: ${{ parameters.keystore.Alias }}
+          apksignerKeyPassword: ${{ parameters.keyPassword }}
+          apksignerArguments: --out ${{ parameters.outputDirectory }}/app.${{ parameters.environment }}.release.apk
+          zipalign: true
+
+      - task: PublishBuildArtifacts@1
+        displayName: 'Publishing artifact to: drop'
+        inputs:
+          TargetPath: '${{ parameters.outputDirectory}}/app.${{ parameters.environment }}.release.apk'
+          ArtifactName: build_${{ parameters.environment }}
