@@ -7,10 +7,31 @@ parameters:
   keystoreAlias: 'NOT_DEFINE'
   keyPassword: 'NOT_DEFINE'
 
+variables:
+  monoVersion: '6_4_0'
+
 jobs:
   - job: 
     displayName: 'Building ${{ parameters.environment }}'
     steps:
+      - task: UseDotNet@2
+        displayName: Use .Net Core sdk 3.0.x
+        inputs:
+          packageType: 'sdk'
+          version: '3.0.x'
+          
+      - task: Bash@3
+        displayName: Bash script copy Xamarin Android mono
+        inputs:
+          targetType: 'inline'
+          script: |
+            sudo $AGENT_HOMEDIRECTORY/scripts/select-xamarin-sdk.sh $(MonoVersion)
+    
+      - task: Boots@1
+        displayName: Install Xamarin.Android Mono 6.4
+        inputs:
+          uri: 'https://download.mono-project.com/archive/6.4.0/macos-10-universal/MonoFramework-MDK-6.4.0.187.macos10.xamarin.universal.pkg'
+    
       - task: NuGetToolInstaller@1
         displayName: 'Use Nuget 5.3.1'
         inputs:
