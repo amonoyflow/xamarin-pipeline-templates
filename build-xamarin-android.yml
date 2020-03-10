@@ -1,1 +1,12 @@
+trigger:
+- master
 
+pool:
+  vmImage: 'macos-latest'
+
+stages:
+    - stage: Build
+      displayName: Build Stage
+    
+    - stage: Distribute
+      displayName: Distribute stage
