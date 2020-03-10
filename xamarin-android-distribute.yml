@@ -34,5 +34,3 @@ jobs:
         releaseNotesOption: 'input'
         releaseNotesInput: 'New version'
         destinationType: 'groups'
-        distributionGroupId: ${{ parameters.distributionGroupId }}
-
