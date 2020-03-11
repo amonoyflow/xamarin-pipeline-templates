@@ -3,7 +3,7 @@ parameters:
   outputDirectory: 'NOT_DEFINE'
   appSlug: 'NOT_DEFINE'
   distributionGroupId: 'NOT_DEFINE'
-  serverEndpoint: 'VSAC'
+  serverEndpoint: 'AppCenter'
 
 jobs:
   - job:
