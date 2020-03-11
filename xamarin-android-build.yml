@@ -6,6 +6,7 @@ parameters:
   keystorePassword: 'NOT_DEFINE'
   keystoreAlias: 'NOT_DEFINE'
   keyPassword: 'NOT_DEFINE'
+  projectPath: 'NOT_DEFINE'
 
 jobs:
   - job: 
@@ -44,7 +45,7 @@ jobs:
       - task: XamarinAndroid@1
         displayName: 'Build PlanningPoker Android'
         inputs:
-          projectFile: 'PlanningPoker/PlanningPoker.Android/PlanningPoker.Android.csproj'
+          projectFile: '${{ parameters.projectPath }}'
           outputDirectory: ${{ parameters.outputDirectory }}
           configuration: ${{ parameters.buildConfiguration }}
 
