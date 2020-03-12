@@ -63,7 +63,7 @@ jobs:
           sourcePath: '$(manifestPath)'
           versionCodeOption: 'buildid'
           versionCode: '$(Build.BuildId)'
-          versionName: '{{ parameters.version }}' 
+          versionName: '${{ parameters.version }}' 
           printFile: true
 
       # Restore nuget packages.
