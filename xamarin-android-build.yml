@@ -6,10 +6,9 @@ parameters:
   keystorePassword: 'NOT_DEFINE'
   keystoreAlias: 'NOT_DEFINE'
   keyPassword: 'NOT_DEFINE'
-  projectPath: 'NOT_DEFINE'
-  manifestPath: 'NOT_DEFINE'
   netCoreVersion: 'NOT_DEFINE'
   nugetVersion: 'NOT_DEFINE'
+  manifestPath: 'NOT_DEFINE'
   version: 'NOT_DEFINE'
 
 jobs:
@@ -48,7 +47,7 @@ jobs:
       - task: android-manifest-version@1
         displayName: Increment android version
         inputs:
-          sourcePath: '${{ parameters.manifestPath }}'
+          sourcePath: '{{ parameters.manifestPath }}'
           versionCodeOption: 'buildid'
           versionCode: '$(Build.BuildId)'
           versionName: '${{ parameters.version }}'
@@ -64,7 +63,7 @@ jobs:
       - task: XamarinAndroid@1
         displayName: 'Building android project'
         inputs:
-          projectFile: '${{ parameters.projectPath }}'
+          projectFile: '**/*.Android.csproj'
           outputDirectory: ${{ parameters.outputDirectory }}
           configuration: ${{ parameters.buildConfiguration }}
           
