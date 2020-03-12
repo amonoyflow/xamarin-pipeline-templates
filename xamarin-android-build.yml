@@ -43,16 +43,27 @@ jobs:
         inputs:
           uri: 'https://download.mono-project.com/archive/6.4.0/macos-10-universal/MonoFramework-MDK-6.4.0.187.macos10.xamarin.universal.pkg'
 
-      # Increment the version number and name of android build.
-      - task: android-manifest-version@1
-        displayName: Increment android version
+      # Finding AndroidManifest.xml file.
+      - task: PowerShell@2
+        displayName: 'Determine the location of AndroidManifest.xml'
         inputs:
-          sourcePath: '{{ parameters.manifestPath }}'
+          targetType: 'inline'
+          script: |
+            Write-Host "Finding Package Manifest (ie AndroidManifest.xml). Set android_manifest_filename parameter to override"
+            $manifest = (Get-ChildItem -Filter "AndroidManifest.xml" -Path "$(System.DefaultWorkingDirectory)" -Recurse | Select-Object -First 1 ).FullName
+            Write-Host "Found at $manifest"
+            Write-Host "##vso[task.setvariable variable=manifestPath]$manifest"
+
+      # Increment the version number and name of android build.      
+      - task: android-manifest-version@1
+        displayName: 'Incrementing application version in $(manifestPath)'
+        inputs:
+          sourcePath: '$(manifestPath)'
           versionCodeOption: 'buildid'
           versionCode: '$(Build.BuildId)'
-          versionName: '${{ parameters.version }}'
+          versionName: '{{ parameters.version }}' 
           printFile: true
-      
+
       # Restore nuget packages.
       - task: NuGetCommand@2
         inputs:
