@@ -81,8 +81,8 @@ jobs:
 
       - task: AppCenterDistribute@3
         inputs:
-          serverEndpoint: ${{ parameters.serverEndpoint }}
-          appSlug: ${{ parameters.appSlug }}
+          serverEndpoint: 'AppCenter'
+          appSlug: 'flow/Planning-Poker'
           appFile: '${{ parameters.outputDirectory }}/*.apk'
           symbolOption: 'Android'
           releaseNotesOption: 'input'
