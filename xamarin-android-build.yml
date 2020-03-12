@@ -73,5 +73,5 @@ jobs:
       - task: PublishBuildArtifacts@1
         displayName: 'Publishing artifact'
         inputs:
-          TargetPath: '${{ parameters.outputDirectory}}/app.${{ parameters.environment }}.release.apk'
+          TargetPath: '${{ parameters.outputDirectory}}/artifacts/app.${{ parameters.environment }}.release.apk'
           ArtifactName: build_${{ parameters.environment }}
