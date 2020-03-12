@@ -14,6 +14,7 @@ jobs:
         serverEndpoint: ${{ parameters.serverEndpoint }}
         appSlug: ${{ parameters.appSlug }}
         appFile: '${{ parameters.outputDirectory }}/*.apk'
+        symbolOption: 'Android'
         releaseNotesOption: 'input'
         releaseNotesInput: 'New version'
         destinationType: 'groups'
