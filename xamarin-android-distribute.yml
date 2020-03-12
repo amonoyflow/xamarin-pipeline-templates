@@ -13,7 +13,7 @@ jobs:
       inputs:
         serverEndpoint: ${{ parameters.serverEndpoint }}
         appSlug: ${{ parameters.appSlug }}
-        appFile: '${{ parameters.outputDirectory }}/app.${{ parameters.environment }}.release.apk'
+        appFile: '${{ parameters.outputDirectory}}/app.${{ parameters.environment }}.release.apk'
         releaseNotesOption: 'input'
         releaseNotesInput: 'New version'
         destinationType: 'groups'
