@@ -15,8 +15,7 @@ jobs:
     displayName: 'Building ${{ parameters.environment }}'
     steps:
 
-      # Installing .NET Core 3.0.x
-      # Latest reference assemblies and build system requires .NET Core.
+      # Reference assemblies and build system requires .NET Core 3.0.x.
       - task: UseDotNet@2
         displayName: Use .Net Core sdk ${{ parameters.netCoreVersion }}
         inputs:
@@ -51,7 +50,7 @@ jobs:
           
       # Build Xamarin Android project.
       - task: XamarinAndroid@1
-        displayName: 'Build PlanningPoker Android'
+        displayName: 'Building android project'
         inputs:
           projectFile: '${{ parameters.projectPath }}'
           outputDirectory: ${{ parameters.outputDirectory }}
@@ -67,23 +66,12 @@ jobs:
           apksignerKeystorePassword: ${{ parameters.keystorePassword }}
           apksignerKeystoreAlias: ${{ parameters.keystoreAlias }}
           apksignerKeyPassword: ${{ parameters.keyPassword }}
-          #apksignerArguments: --out ${{ parameters.outputDirectory }}/app.${{ parameters.environment }}.release.apk
+          apksignerArguments: --out ${{ parameters.outputDirectory }}/app.${{ parameters.environment }}.release.apk
           zipalign: true
       
       # Publishing artifact from this stage.
       - task: PublishBuildArtifacts@1
         displayName: 'Publishing artifact to: ${{ parameters.outputDirectory }}'
         inputs:
-          #TargetPath: '${{ parameters.outputDirectory}}/app.${{ parameters.environment }}.release.apk'
-          #ArtifactName: build_${{ parameters.environment }}
-          pathToPublish: ${{ parameters.outputDirectory }}
-
-      - task: AppCenterDistribute@3
-        inputs:
-          serverEndpoint: AppCenter
-          appSlug: flow/Planning-Poker
-          appFile: '${{ parameters.outputDirectory }}/*.apk'
-          symbolsOption: 'Android'
-          releaseNotesOption: 'input'
-          releaseNotesInput: 'New version'
-          destinationType: 'groups'
+          TargetPath: '${{ parameters.outputDirectory}}/app.${{ parameters.environment }}.release.apk'
+          ArtifactName: build_${{ parameters.environment }}
