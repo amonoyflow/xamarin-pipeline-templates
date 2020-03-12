@@ -77,3 +77,13 @@ jobs:
           #TargetPath: '${{ parameters.outputDirectory}}/app.${{ parameters.environment }}.release.apk'
           #ArtifactName: build_${{ parameters.environment }}
           pathToPublish: ${{ parameters.outputDirectory }}
+
+      - task: AppCenterDistribute@3
+        inputs:
+          serverEndpoint: AppCenter
+          appSlug: flow/Planning-Poker
+          appFile: '${{ parameters.outputDirectory }}/*.apk'
+          symbolsOption: 'Android'
+          releaseNotesOption: 'input'
+          releaseNotesInput: 'New version'
+          destinationType: 'groups'
