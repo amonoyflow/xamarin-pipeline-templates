@@ -40,15 +40,13 @@ jobs:
       - task: NuGetToolInstaller@1
         displayName: 'Use Nuget ${{ parameters.nugetVersion }}'
         inputs:
-          versionSpec: ${{ parameters.nugetVersion }}
+          versionSpec: '${{ parameters.nugetVersion }}'
       
-      # Use MSBuild to retore nuget on solution level.
-      - task: MSBuild@1
-        displayName: 'Restoring Nuget'
-        inputs:
-          solution: '**/*.sln'
-          configuration: '${{ parameters.buildConfiguration }}'
-          msbuildArguments: '/t:Restore'
+      # Restore Nugets.
+      - task: NuGetCommand@2
+          displayName: 'Restoring Nugets'
+          inputs:
+            restoreSolution: '**/*.sln'
           
       # Build Xamarin Android project.
       - task: XamarinAndroid@1
