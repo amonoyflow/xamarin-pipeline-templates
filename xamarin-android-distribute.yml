@@ -1,5 +1,5 @@
 parameters:
-  environment: 'NOT_DEFINE'
+  projectName: 'NOT_DEFINE'
   outputDirectory: 'NOT_DEFINE'
   appSlug: 'NOT_DEFINE'
   distributionGroupId: 'NOT_DEFINE'
@@ -7,19 +7,19 @@ parameters:
 
 jobs:
   - job:
-    displayName: Distribute ${{ parameters.environment }}
+    displayName: Distributing ${{ parameters.projectName }}
     steps:
 
     - task: DownloadPipelineArtifact@2
       inputs:
-        artifactName: 'build_${{ parameters.environment }}'
+        artifactName: 'build_${{ parameters.projectName }}'
         targetPath: ${{ parameters.outputDirectory }}
 
     - task: CopyFiles@2
       inputs:
         sourceFolder: ${{ parameters.outputDirectory }} 
-        contents: '**/app.${{ parameters.environment }}.release.apk'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/${{ parameters.environment }}'
+        contents: '**/app.${{ parameters.projectName }}.release.apk'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/${{ parameters.projectName }}'
 
     - task: PublishBuildArtifacts@1
       inputs:
@@ -31,7 +31,7 @@ jobs:
       inputs:
         serverEndpoint: ${{ parameters.serverEndpoint }}
         appSlug: ${{ parameters.appSlug }}
-        appFile: '${{ parameters.outputDirectory }}/app.${{ parameters.environment }}.release.apk'
+        appFile: '${{ parameters.outputDirectory }}/app.${{ parameters.projectName }}.release.apk'
         symbolsOption: 'Android'
         releaseNotesOption: 'input'
         releaseNotesInput: 'New version'
