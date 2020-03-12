@@ -7,13 +7,14 @@ parameters:
   keystoreAlias: 'NOT_DEFINE'
   keyPassword: 'NOT_DEFINE'
   projectPath: 'NOT_DEFINE'
-  netCoreVersion: '3.0.x'
-  nugetVersion: '5.3.1'
+  netCoreVersion: 'NOT_DEFINE'
+  nugetVersion: 'NOT_DEFINE'
 
 jobs:
   - job: 
     displayName: 'Building ${{ parameters.environment }}'
     steps:
+
       # Installing .NET Core 3.0.x
       # Latest reference assemblies and build system requires .NET Core.
       - task: UseDotNet@2
@@ -30,7 +31,7 @@ jobs:
           script: |
             sudo $AGENT_HOMEDIRECTORY/scripts/select-xamarin-sdk.sh 6_4_0
       
-      # Use Nuget 5.3.1
+      # Using Nuget version 5.3.1
       - task: NuGetToolInstaller@1
         displayName: 'Use Nuget ${{ parameters.nugetVersion }}'
         inputs:
@@ -42,13 +43,11 @@ jobs:
         inputs:
           uri: 'https://download.mono-project.com/archive/6.4.0/macos-10-universal/MonoFramework-MDK-6.4.0.187.macos10.xamarin.universal.pkg'
       
-      # Restore Nugets.
-      - task: MSBuild@1
-        displayName: 'Restore Nuget'
+      # Restore nuget packages.
+      - task: NuGetCommand@2
         inputs:
-          solution: '${{ parameters.projectPath }}'
-          configuration: '$(buildConfiguration)'
-          msbuildArguments: '/t:Restore'
+          command: 'restore'
+          restoreSolution: '**/*.sln'
           
       # Build Xamarin Android project.
       - task: XamarinAndroid@1
@@ -78,13 +77,3 @@ jobs:
           #TargetPath: '${{ parameters.outputDirectory}}/app.${{ parameters.environment }}.release.apk'
           #ArtifactName: build_${{ parameters.environment }}
           pathToPublish: ${{ parameters.outputDirectory }}
-
-      - task: AppCenterDistribute@3
-        inputs:
-          serverEndpoint: 'AppCenter'
-          appSlug: 'flow/Planning-Poker'
-          appFile: '${{ parameters.outputDirectory }}/*.apk'
-          symbolOption: 'Android'
-          releaseNotesOption: 'input'
-          releaseNotesInput: 'New version'
-          destinationType: 'groups'
