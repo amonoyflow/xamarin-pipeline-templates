@@ -66,7 +66,7 @@ jobs:
           apksignerKeystorePassword: ${{ parameters.keystorePassword }}
           apksignerKeystoreAlias: ${{ parameters.keystoreAlias }}
           apksignerKeyPassword: ${{ parameters.keyPassword }}
-          #apksignerArguments: --out ${{ parameters.outputDirectory }}/app.${{ parameters.environment }}.release.apk
+          apksignerArguments: --out ${{ parameters.outputDirectory }}/app.${{ parameters.environment }}.release.apk
           zipalign: true
       
       # Publishing artifact from this stage.
