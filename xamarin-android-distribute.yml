@@ -10,11 +10,28 @@ jobs:
     displayName: Distribute ${{ parameters.environment }}
     steps:
 
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        artifactName: 'build_${{ parameters.environment }}'
+        targetPath: ${{ parameters.outputDirectory }}
+
+    - task: CopyFiles@2
+      inputs:
+        sourceFolder: ${{ parameters.outputDirectory }} 
+        contents: '**/app.${{ parameters.env }}.release.apk'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/${{ parameters.environment }}'
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: 'apks'
+        publishLocation: 'container'
+
     - task: AppCenterDistribute@3
       inputs:
         serverEndpoint: ${{ parameters.serverEndpoint }}
         appSlug: ${{ parameters.appSlug }}
-        appFile: '${{ parameters.outputDirectory }}/*.apk'
+        appFile: '${{ parameters.outputDirectory }}/app.${{ parameters.env }}.release.apk'
         symbolsOption: 'Android'
         releaseNotesOption: 'input'
         releaseNotesInput: 'New version'
