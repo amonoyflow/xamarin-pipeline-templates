@@ -2,7 +2,6 @@ parameters:
   projectName: 'NOT_DEFINE'
   outputDirectory: 'NOT_DEFINE'
   appSlug: 'NOT_DEFINE'
-  distributionGroupId: 'NOT_DEFINE'
   serverEndpoint: 'AppCenter'
 
 jobs:
