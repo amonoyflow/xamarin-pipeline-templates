@@ -21,13 +21,7 @@ jobs:
         inputs:
           packageType: 'sdk'
           version: '${{ parameters.netCoreVersion }}'
-      
-      # Download Mono 6.4.0 to build app with C# 8, iOS 13 and Android 10.
-      - task: Boots@1
-        displayName: Install Xamarin.Android Mono 6.4
-        inputs:
-          uri: 'https://download.mono-project.com/archive/6.4.0/macos-10-universal/MonoFramework-MDK-6.4.0.187.macos10.xamarin.universal.pkg'
-      
+          
       # Use Bash to tell what version Xamarin and Mono to use when compiling app.
       - task: Bash@3
         displayName: Bash script copy Xamarin Android mono
@@ -41,6 +35,12 @@ jobs:
         displayName: 'Use Nuget ${{ parameters.nugetVersion }}'
         inputs:
           versionSpec: '${{ parameters.nugetVersion }}'
+      
+      # Download Mono 6.4.0 to build app with C# 8, iOS 13 and Android 10.
+      - task: Boots@1
+        displayName: Install Xamarin.Android Mono 6.4
+        inputs:
+          uri: 'https://download.mono-project.com/archive/6.4.0/macos-10-universal/MonoFramework-MDK-6.4.0.187.macos10.xamarin.universal.pkg'
       
       # Restore Nugets.
       - task: MSBuild@1
