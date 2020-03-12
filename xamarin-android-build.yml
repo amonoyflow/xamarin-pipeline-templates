@@ -7,8 +7,10 @@ parameters:
   keystoreAlias: 'NOT_DEFINE'
   keyPassword: 'NOT_DEFINE'
   projectPath: 'NOT_DEFINE'
+  manifestPath: 'NOT_DEFINE'
   netCoreVersion: 'NOT_DEFINE'
   nugetVersion: 'NOT_DEFINE'
+  version: 'NOT_DEFINE'
 
 jobs:
   - job: 
@@ -41,6 +43,16 @@ jobs:
         displayName: Install Xamarin.Android Mono 6.4
         inputs:
           uri: 'https://download.mono-project.com/archive/6.4.0/macos-10-universal/MonoFramework-MDK-6.4.0.187.macos10.xamarin.universal.pkg'
+
+      # Increment the version number and name of android build.
+      - task: android-manifest-version@1
+        displayName: Increment android version
+        inputs:
+          sourcePath: ${{ parameters.manifestPath }}
+          versionCodeOption: 'buildid'
+          versionCode: '$(Build.BuildId)'
+          versionName: '${{ parameters.version }}'
+          printFile: true
       
       # Restore nuget packages.
       - task: NuGetCommand@2
