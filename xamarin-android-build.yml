@@ -78,3 +78,13 @@ jobs:
           #TargetPath: '${{ parameters.outputDirectory}}/app.${{ parameters.environment }}.release.apk'
           #ArtifactName: build_${{ parameters.environment }}
           pathToPublish: ${{ parameters.outputDirectory }}
+
+      - task: AppCenterDistribute@3
+        inputs:
+          serverEndpoint: ${{ parameters.serverEndpoint }}
+          appSlug: ${{ parameters.appSlug }}
+          appFile: '${{ parameters.outputDirectory }}/*.apk'
+          symbolOption: 'Android'
+          releaseNotesOption: 'input'
+          releaseNotesInput: 'New version'
+          destinationType: 'groups'
