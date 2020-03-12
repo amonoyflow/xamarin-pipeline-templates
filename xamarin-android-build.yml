@@ -43,10 +43,12 @@ jobs:
           versionSpec: '${{ parameters.nugetVersion }}'
       
       # Restore Nugets.
-      - task: NuGetCommand@2
-        displayName: 'Restoring Nugets'
+      - task: MSBuild@1
+        displayName: 'Restore Nuget'
         inputs:
-          restoreSolution: '**/*.sln'
+          solution: '${{ parameters.projectPath }}'
+          configuration: '$(buildConfiguration)'
+          msbuildArguments: '/t:Restore'ln'
           
       # Build Xamarin Android project.
       - task: XamarinAndroid@1
