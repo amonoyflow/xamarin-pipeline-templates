@@ -18,7 +18,7 @@ jobs:
     - task: CopyFiles@2
       inputs:
         sourceFolder: ${{ parameters.outputDirectory }} 
-        contents: '**/app.${{ parameters.env }}.release.apk'
+        contents: '**/app.${{ parameters.environment }}.release.apk'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/${{ parameters.environment }}'
 
     - task: PublishBuildArtifacts@1
@@ -31,7 +31,7 @@ jobs:
       inputs:
         serverEndpoint: ${{ parameters.serverEndpoint }}
         appSlug: ${{ parameters.appSlug }}
-        appFile: '${{ parameters.outputDirectory }}/app.${{ parameters.env }}.release.apk'
+        appFile: '${{ parameters.outputDirectory }}/app.${{ parameters.environment }}.release.apk'
         symbolsOption: 'Android'
         releaseNotesOption: 'input'
         releaseNotesInput: 'New version'
