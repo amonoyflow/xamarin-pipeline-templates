@@ -48,7 +48,7 @@ jobs:
         inputs:
           solution: '${{ parameters.projectPath }}'
           configuration: '$(buildConfiguration)'
-          msbuildArguments: '/t:Restore'ln'
+          msbuildArguments: '/t:Restore'
           
       # Build Xamarin Android project.
       - task: XamarinAndroid@1
