@@ -7,48 +7,58 @@ parameters:
   keystoreAlias: 'NOT_DEFINE'
   keyPassword: 'NOT_DEFINE'
   projectPath: 'NOT_DEFINE'
+  netCoreVersion: '3.0.x'
+  nugetVersion: '5.3.1'
 
 jobs:
   - job: 
     displayName: 'Building ${{ parameters.environment }}'
     steps:
+      # Installing .NET Core 3.0.x
+      # Latest reference assemblies and build system requires .NET Core.
       - task: UseDotNet@2
-        displayName: Use .Net Core sdk 3.0.x
+        displayName: Use .Net Core sdk ${{ parameters.netCoreVersion }}
         inputs:
           packageType: 'sdk'
-          version: '3.0.x'
-          
+          version: '${{ parameters.netCoreVersion }}'
+      
+      # Download Mono 6.4.0 to build app with C# 8, iOS 13 and Android 10.
+      - task: Boots@1
+        displayName: Install Xamarin.Android Mono 6.4
+        inputs:
+          uri: 'https://download.mono-project.com/archive/6.4.0/macos-10-universal/MonoFramework-MDK-6.4.0.187.macos10.xamarin.universal.pkg'
+      
+      # Use Bash to tell what version Xamarin and Mono to use when compiling app.
       - task: Bash@3
         displayName: Bash script copy Xamarin Android mono
         inputs:
           targetType: 'inline'
           script: |
             sudo $AGENT_HOMEDIRECTORY/scripts/select-xamarin-sdk.sh 6_4_0
-    
-      - task: Boots@1
-        displayName: Install Xamarin.Android Mono 6.4
-        inputs:
-          uri: 'https://download.mono-project.com/archive/6.4.0/macos-10-universal/MonoFramework-MDK-6.4.0.187.macos10.xamarin.universal.pkg'
-    
+      
+      # Use Nuget 5.3.1
       - task: NuGetToolInstaller@1
-        displayName: 'Use Nuget 5.3.1'
+        displayName: 'Use Nuget ${{ parameters.nugetVersion }}'
         inputs:
-          versionSpec: 5.3.1
-
+          versionSpec: ${{ parameters.nugetVersion }}
+      
+      # Use MSBuild to retore nuget on solution level.
       - task: MSBuild@1
         displayName: 'Restoring Nuget'
         inputs:
           solution: '**/*.sln'
           configuration: '${{ parameters.buildConfiguration }}'
           msbuildArguments: '/t:Restore'
-
+          
+      # Build Xamarin Android project.
       - task: XamarinAndroid@1
         displayName: 'Build PlanningPoker Android'
         inputs:
           projectFile: '${{ parameters.projectPath }}'
           outputDirectory: ${{ parameters.outputDirectory }}
           configuration: ${{ parameters.buildConfiguration }}
-
+          
+      # Singing and aligning APK files.
       - task: AndroidSigning@3
         displayName: 'Singing and Aligning APK files(s)'
         inputs:
@@ -60,9 +70,11 @@ jobs:
           apksignerKeyPassword: ${{ parameters.keyPassword }}
           apksignerArguments: --out ${{ parameters.outputDirectory }}/app.${{ parameters.environment }}.release.apk
           zipalign: true
-
+      
+      # Publishing artifact from this stage.
       - task: PublishBuildArtifacts@1
-        displayName: 'Publishing artifact to: drop'
+        displayName: 'Publishing artifact to: $(build.artifactStagingDirectory)'
         inputs:
           TargetPath: '${{ parameters.outputDirectory}}/app.${{ parameters.environment }}.release.apk'
           ArtifactName: build_${{ parameters.environment }}
+          pathToPublish: '$(build.artifactStagingDirectory)'
