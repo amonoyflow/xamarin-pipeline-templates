@@ -44,9 +44,9 @@ jobs:
       
       # Restore Nugets.
       - task: NuGetCommand@2
-          displayName: 'Restoring Nugets'
-          inputs:
-            restoreSolution: '**/*.sln'
+        displayName: 'Restoring Nugets'
+        inputs:
+          restoreSolution: '**/*.sln'
           
       # Build Xamarin Android project.
       - task: XamarinAndroid@1
