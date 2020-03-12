@@ -1,5 +1,5 @@
 parameters:
-  environment: 'NOT_DEFINE'
+  projectName: 'NOT_DEFINE'
   buildConfiguration: 'NOT_DEFINE'
   outputDirectory: 'NOT_DEFINE'
   keystoreFile: 'NOT_DEFINE'
@@ -12,7 +12,7 @@ parameters:
 
 jobs:
   - job: 
-    displayName: 'Building ${{ parameters.environment }}'
+    displayName: 'Building ${{ parameters.projectName }}'
     steps:
 
       # Reference assemblies and build system requires .NET Core 3.0.x.
@@ -66,12 +66,12 @@ jobs:
           apksignerKeystorePassword: ${{ parameters.keystorePassword }}
           apksignerKeystoreAlias: ${{ parameters.keystoreAlias }}
           apksignerKeyPassword: ${{ parameters.keyPassword }}
-          apksignerArguments: --out ${{ parameters.outputDirectory }}/app.${{ parameters.environment }}.release.apk
+          apksignerArguments: --out ${{ parameters.outputDirectory }}/app.${{ parameters.projectName }}.release.apk
           zipalign: true
       
       # Publishing artifact from this stage.
       - task: PublishBuildArtifacts@1
         displayName: 'Publishing artifact'
         inputs:
-          ArtifactName: build_${{ parameters.environment }}
+          ArtifactName: build_${{ parameters.projectName }}
           PathtoPublish: ${{ parameters.outputDirectory }}
