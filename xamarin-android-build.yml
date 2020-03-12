@@ -8,12 +8,14 @@ parameters:
   keyPassword: 'NOT_DEFINE'
   netCoreVersion: 'NOT_DEFINE'
   nugetVersion: 'NOT_DEFINE'
-  manifestPath: 'NOT_DEFINE'
   version: 'NOT_DEFINE'
 
 jobs:
   - job: 
     displayName: 'Building ${{ parameters.projectName }}'
+    variables:
+    - name: manifestPath
+      value: ''
     steps:
 
       # Reference assemblies and build system requires .NET Core 3.0.x.
