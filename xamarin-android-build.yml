@@ -46,7 +46,7 @@ jobs:
       - task: android-manifest-version@1
         displayName: Increment android version
         inputs:
-          sourcePath: '**/AndroidManifest.xml'
+          sourcePath: '**/*AndroidManifest.xml'
           versionCodeOption: 'buildid'
           versionCode: '$(Build.BuildId)'
           versionName: '${{ parameters.version }}'
