@@ -1,0 +1,6 @@
+parameters:
+  projectName: 'NOT_DEFINE'
+
+jobs:
+  - job: 
+    displayName: 'Building ${{ parameters.projectName }}'
